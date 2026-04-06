@@ -50,7 +50,7 @@ body::before {
   }
 
   .input-field {
-    @apply w-full bg-white/5 border border-white/10 text-white rounded-2xl px-4 py-3 focus:outline-none focus:border-primary/60 focus:bg-white/8 transition-all placeholder-white/30 backdrop-blur-sm;
+    @apply w-full bg-white/5 border border-white/10 text-white rounded-2xl px-4 py-3 focus:outline-none focus:border-primary/60 transition-all placeholder-white/30 backdrop-blur-sm;
   }
 
   .card {

@@ -30,6 +30,9 @@ const io = new Server(server, {
 // Connect DB
 connectDB();
 
+// Serve local uploads (dev fallback when AWS not configured)
+app.use("/uploads", express.static(require("path").join(__dirname, "uploads")));
+
 // Stripe webhook needs raw body - must be before express.json()
 app.post("/api/payments/webhook", express.raw({ type: "application/json" }), handleWebhook);
 

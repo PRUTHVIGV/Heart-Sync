@@ -60,12 +60,15 @@ if (hasAWS) {
 // PUT /api/users/profile
 router.put("/profile", authenticate, async (req, res) => {
   try {
-    const { bio, occupation, location, interests, photos } = req.body;
-    const user = await User.findByIdAndUpdate(
-      req.user._id,
-      { bio, occupation, location, interests, photos },
-      { new: true, runValidators: true }
-    );
+    const allowed = [
+      "bio", "occupation", "company", "location", "hometown", "height",
+      "interests", "photos", "prompts", "relationshipGoal", "loveLanguage",
+      "personalityType", "zodiac", "education", "drinking", "smoking",
+      "exercise", "diet", "kids", "religion", "politics",
+    ];
+    const update = {};
+    allowed.forEach((key) => { if (req.body[key] !== undefined) update[key] = req.body[key]; });
+    const user = await User.findByIdAndUpdate(req.user._id, update, { new: true, runValidators: true });
     res.json({ user });
   } catch {
     res.status(500).json({ message: "Failed to update profile" });

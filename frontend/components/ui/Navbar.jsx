@@ -2,54 +2,72 @@ import { useRouter } from "next/router";
 import { useAuth } from "../../context/AuthContext";
 import { FaHeart, FaComments, FaUser, FaFire, FaCog } from "react-icons/fa";
 import NotificationBell from "./NotificationBell";
+import { motion } from "framer-motion";
+
+const navItems = [
+  { icon: <FaFire />, label: "Discover", path: "/dashboard" },
+  { icon: <FaHeart />, label: "Matches", path: "/matches" },
+  { icon: <FaComments />, label: "Messages", path: "/messages" },
+  { icon: <FaUser />, label: "Profile", path: "/profile" },
+];
 
 export default function Navbar() {
   const router = useRouter();
   const { logout } = useAuth();
 
-  const navItems = [
-    { icon: <FaFire />, label: "Discover", path: "/dashboard" },
-    { icon: <FaHeart />, label: "Matches", path: "/matches" },
-    { icon: <FaComments />, label: "Messages", path: "/messages" },
-    { icon: <FaUser />, label: "Profile", path: "/profile" },
-  ];
-
   return (
-    <nav className="flex justify-between items-center px-6 py-4 border-b border-gray-800 bg-dark sticky top-0 z-40">
-      <div className="flex items-center gap-2 cursor-pointer" onClick={() => router.push("/dashboard")}>
-        <FaHeart className="text-primary text-xl" />
-        <span className="text-xl font-bold text-white">HeartSync</span>
+    <nav className="flex justify-between items-center px-5 py-3 border-b border-white/5 bg-dark/80 backdrop-blur-xl sticky top-0 z-40">
+      {/* Logo */}
+      <div
+        className="flex items-center gap-2 cursor-pointer"
+        onClick={() => router.push("/dashboard")}
+      >
+        <div className="w-8 h-8 bg-gradient-to-br from-primary to-accent rounded-xl flex items-center justify-center">
+          <FaHeart className="text-white text-xs" />
+        </div>
+        <span className="text-white font-bold text-lg hidden sm:block">HeartSync</span>
       </div>
 
+      {/* Nav Items */}
       <div className="flex items-center gap-1">
-        {navItems.map((item) => (
-          <button
-            key={item.path}
-            onClick={() => router.push(item.path)}
-            className={`flex flex-col items-center gap-1 px-4 py-2 rounded-xl transition-colors text-xs ${
-              router.pathname === item.path
-                ? "text-primary bg-primary/10"
-                : "text-gray-400 hover:text-white hover:bg-gray-800"
-            }`}
-          >
-            <span className="text-lg">{item.icon}</span>
-            <span>{item.label}</span>
-          </button>
-        ))}
+        {navItems.map((item) => {
+          const active = router.pathname === item.path;
+          return (
+            <motion.button
+              key={item.path}
+              whileTap={{ scale: 0.9 }}
+              onClick={() => router.push(item.path)}
+              className={`relative flex flex-col items-center gap-0.5 px-3 py-2 rounded-2xl transition-all text-xs ${
+                active ? "text-white" : "text-white/30 hover:text-white/60"
+              }`}
+            >
+              {active && (
+                <motion.div
+                  layoutId="nav-pill"
+                  className="absolute inset-0 bg-white/8 rounded-2xl border border-white/10"
+                />
+              )}
+              <span className={`text-base relative z-10 ${active ? "text-primary" : ""}`}>
+                {item.icon}
+              </span>
+              <span className="relative z-10">{item.label}</span>
+            </motion.button>
+          );
+        })}
       </div>
 
-      <div className="flex items-center gap-2">
+      {/* Right side */}
+      <div className="flex items-center gap-1">
         <NotificationBell />
-        <button
+        <motion.button
+          whileTap={{ scale: 0.9 }}
           onClick={() => router.push("/settings")}
-          className={`w-10 h-10 flex items-center justify-center rounded-xl transition-colors ${
-            router.pathname === "/settings"
-              ? "text-primary bg-primary/10"
-              : "text-gray-400 hover:text-white hover:bg-gray-800"
+          className={`w-9 h-9 flex items-center justify-center rounded-xl transition-colors ${
+            router.pathname === "/settings" ? "text-primary bg-white/8" : "text-white/30 hover:text-white/60"
           }`}
         >
-          <FaCog className="text-xl" />
-        </button>
+          <FaCog />
+        </motion.button>
       </div>
     </nav>
   );

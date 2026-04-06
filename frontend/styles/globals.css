@@ -1,51 +1,96 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --primary: #FF4458;
+  --secondary: #FF6B6B;
+  --accent: #a855f7;
+  --dark: #0d0d1a;
+  --card: #13131f;
+  --card2: #1a1a2e;
+  --border: rgba(255,255,255,0.07);
 }
 
 body {
-  background-color: #1a1a2e;
+  background-color: var(--dark);
   color: #ffffff;
   font-family: "Inter", sans-serif;
+  overflow-x: hidden;
 }
+
+/* Animated background */
+body::before {
+  content: "";
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(ellipse at 20% 20%, rgba(255,68,88,0.06) 0%, transparent 50%),
+              radial-gradient(ellipse at 80% 80%, rgba(168,85,247,0.06) 0%, transparent 50%),
+              radial-gradient(ellipse at 50% 50%, rgba(255,107,107,0.03) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+#__next { position: relative; z-index: 1; }
 
 @layer components {
   .btn-primary {
-    @apply bg-primary hover:bg-secondary text-white font-semibold py-3 px-6 rounded-full transition-all duration-200 active:scale-95;
+    @apply relative overflow-hidden bg-gradient-to-r from-[#FF4458] to-[#FF6B6B] text-white font-semibold py-3 px-6 rounded-full transition-all duration-300 active:scale-95 shadow-lg shadow-primary/25 hover:shadow-primary/40 hover:scale-[1.02];
   }
 
   .btn-outline {
-    @apply border-2 border-primary text-primary hover:bg-primary hover:text-white font-semibold py-3 px-6 rounded-full transition-all duration-200;
+    @apply border border-white/20 text-white hover:bg-white/10 font-semibold py-3 px-6 rounded-full transition-all duration-200 backdrop-blur-sm;
   }
 
   .input-field {
-    @apply w-full bg-card border border-gray-700 text-white rounded-xl px-4 py-3 focus:outline-none focus:border-primary transition-colors placeholder-gray-500;
+    @apply w-full bg-white/5 border border-white/10 text-white rounded-2xl px-4 py-3 focus:outline-none focus:border-primary/60 focus:bg-white/8 transition-all placeholder-white/30 backdrop-blur-sm;
   }
 
   .card {
-    @apply bg-card rounded-2xl p-6 border border-gray-800;
+    @apply bg-white/5 rounded-3xl p-6 border border-white/8 backdrop-blur-md;
+  }
+
+  .glass {
+    @apply bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl;
   }
 
   .swipe-card {
-    @apply absolute w-full h-full rounded-3xl overflow-hidden shadow-2xl cursor-grab active:cursor-grabbing;
+    @apply absolute w-full h-full rounded-[2rem] overflow-hidden shadow-2xl cursor-grab active:cursor-grabbing;
+  }
+
+  .glow-text {
+    text-shadow: 0 0 40px rgba(255,68,88,0.5);
   }
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,68,88,0.4); border-radius: 4px; }
+
+/* Range input */
+input[type="range"] { accent-color: #FF4458; }
+
+/* Animations */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
 }
-::-webkit-scrollbar-track {
-  background: #1a1a2e;
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(255,68,88,0.3); }
+  50% { box-shadow: 0 0 40px rgba(255,68,88,0.6); }
 }
-::-webkit-scrollbar-thumb {
-  background: #FF4458;
-  border-radius: 3px;
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
 }
+
+.float { animation: float 3s ease-in-out infinite; }
+.pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }

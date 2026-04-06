@@ -30,25 +30,35 @@ export default function Login() {
   return (
     <>
       <Head><title>Login - HeartSync</title></Head>
-      <div className="min-h-screen bg-dark flex items-center justify-center px-4">
+      <div className="min-h-screen bg-dark flex items-center justify-center px-4 relative overflow-hidden">
+        {/* Orbs */}
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-accent/10 rounded-full blur-3xl pointer-events-none" />
+
         <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="w-full max-w-md"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="w-full max-w-md relative z-10"
         >
+          {/* Logo */}
           <div className="text-center mb-8">
-            <div className="flex items-center justify-center gap-2 mb-4">
-              <FaHeart className="text-primary text-3xl" />
-              <span className="text-3xl font-bold">HeartSync</span>
-            </div>
-            <h1 className="text-2xl font-bold text-white">Welcome back</h1>
-            <p className="text-gray-400 mt-1">Sign in to continue matching</p>
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ type: "spring", stiffness: 200, delay: 0.1 }}
+              className="w-16 h-16 bg-gradient-to-br from-primary to-accent rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-primary/30"
+            >
+              <FaHeart className="text-white text-2xl" />
+            </motion.div>
+            <h1 className="text-3xl font-black text-white">Welcome back</h1>
+            <p className="text-white/40 mt-1">Sign in to continue matching</p>
           </div>
 
-          <div className="card">
+          <div className="glass p-8">
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="text-sm text-gray-400 mb-1 block">Email</label>
+                <label className="text-xs text-white/40 mb-1.5 block uppercase tracking-wider">Email</label>
                 <input
                   name="email"
                   type="email"
@@ -60,24 +70,26 @@ export default function Login() {
                 />
               </div>
 
-              <div className="relative">
-                <label className="text-sm text-gray-400 mb-1 block">Password</label>
-                <input
-                  name="password"
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Your password"
-                  value={form.password}
-                  onChange={handleChange}
-                  required
-                  className="input-field pr-12"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-9 text-gray-400 hover:text-white"
-                >
-                  {showPassword ? <FaEyeSlash /> : <FaEye />}
-                </button>
+              <div>
+                <label className="text-xs text-white/40 mb-1.5 block uppercase tracking-wider">Password</label>
+                <div className="relative">
+                  <input
+                    name="password"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Your password"
+                    value={form.password}
+                    onChange={handleChange}
+                    required
+                    className="input-field pr-12"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/60 transition-colors"
+                  >
+                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  </button>
+                </div>
               </div>
 
               <div className="text-right">
@@ -86,17 +98,29 @@ export default function Login() {
                 </Link>
               </div>
 
-              <button type="submit" disabled={loading} className="btn-primary w-full">
-                {loading ? "Signing in..." : "Sign In"}
-              </button>
+              <motion.button
+                whileTap={{ scale: 0.97 }}
+                type="submit"
+                disabled={loading}
+                className="btn-primary w-full py-3.5 mt-2"
+              >
+                {loading ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    Signing in...
+                  </span>
+                ) : "Sign In"}
+              </motion.button>
             </form>
 
-            <p className="text-center text-gray-400 text-sm mt-6">
-              Don&apos;t have an account?{" "}
-              <Link href="/register" className="text-primary hover:underline font-medium">
-                Sign up free
-              </Link>
-            </p>
+            <div className="mt-6 pt-6 border-t border-white/5 text-center">
+              <p className="text-white/40 text-sm">
+                Don&apos;t have an account?{" "}
+                <Link href="/register" className="text-primary hover:underline font-semibold">
+                  Sign up free
+                </Link>
+              </p>
+            </div>
           </div>
         </motion.div>
       </div>

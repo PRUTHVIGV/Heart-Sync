@@ -57,9 +57,14 @@ app.get("/health", (req, res) => res.json({ status: "ok" }));
 app.use(errorHandler);
 
 // Socket.io
-io.use(authenticateSocket);
+io.use((socket, next) => {
+  const token = socket.handshake.auth?.token;
+  if (!token) return next(); // allow connection, restrict in handlers
+  authenticateSocket(socket, next);
+});
 
 io.on("connection", (socket) => {
+  if (!socket.user) return; // unauthenticated, ignore
   const userId = socket.user._id.toString();
   socket.join(userId);
 

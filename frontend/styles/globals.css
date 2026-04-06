@@ -54,7 +54,7 @@ body::before {
   }
 
   .card {
-    @apply bg-white/5 rounded-3xl p-6 border border-white/8 backdrop-blur-md;
+    @apply bg-white/5 rounded-3xl p-6 border border-white/10 backdrop-blur-md;
   }
 
   .glass {

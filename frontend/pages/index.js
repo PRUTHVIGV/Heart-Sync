@@ -272,8 +272,8 @@ export default function Home() {
             </div>
             <p className="text-white/30 text-sm">© 2024 HeartSync. All rights reserved.</p>
             <div className="flex gap-6 text-white/30 text-sm">
-              <span className="hover:text-white/60 cursor-pointer transition-colors">Privacy</span>
-              <span className="hover:text-white/60 cursor-pointer transition-colors">Terms</span>
+              <span onClick={() => router.push("/privacy")} className="hover:text-white/60 cursor-pointer transition-colors">Privacy</span>
+              <span onClick={() => router.push("/terms")} className="hover:text-white/60 cursor-pointer transition-colors">Terms</span>
               <span className="hover:text-white/60 cursor-pointer transition-colors">Support</span>
             </div>
           </div>

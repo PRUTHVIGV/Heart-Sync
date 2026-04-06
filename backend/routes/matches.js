@@ -2,6 +2,7 @@ const express = require("express");
 const User = require("../models/User");
 const Match = require("../models/Match");
 const Notification = require("../models/Notification");
+const { sendMatchEmail } = require("../config/email");
 const { authenticate } = require("../middleware/auth");
 
 const router = express.Router();
@@ -76,6 +77,8 @@ router.post("/swipe", authenticate, async (req, res) => {
           { recipient: req.user._id, type: "match", message: `You matched with ${targetUser.name}! 💕`, link: `/chat/${match._id}` },
           { recipient: targetUserId, type: "match", message: `You matched with ${currentUser.name}! 💕`, link: `/chat/${match._id}` },
         ]);
+        sendMatchEmail(currentUser.email, currentUser.name, targetUser.name);
+        sendMatchEmail(targetUser.email, targetUser.name, currentUser.name);
         return res.json({ matched: true, matchId: match._id });
       }
     } else {

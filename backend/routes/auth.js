@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const { body, validationResult } = require("express-validator");
 const User = require("../models/User");
 const { authenticate } = require("../middleware/auth");
+const { sendWelcomeEmail, sendPasswordResetEmail, sendVerificationEmail } = require("../config/email");
 
 const router = express.Router();
 
@@ -30,6 +31,7 @@ router.post(
       if (exists) return res.status(400).json({ message: "Email already registered" });
 
       const user = await User.create({ name, email, password, age, gender, interestedIn });
+      sendWelcomeEmail(email, name);
       res.status(201).json({ token: generateToken(user._id), user });
     } catch (err) {
       res.status(500).json({ message: "Server error" });
@@ -82,7 +84,7 @@ router.post("/forgot-password", async (req, res) => {
     // In production: send email via AWS SES or Nodemailer
     // For now, log the link
     console.log(`Password reset link for ${email}: ${resetLink}`);
-
+    sendPasswordResetEmail(email, resetLink);
     res.json({ success: true });
   } catch {
     res.status(500).json({ message: "Server error" });

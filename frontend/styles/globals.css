@@ -1,0 +1,51 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: #1a1a2e;
+  color: #ffffff;
+  font-family: "Inter", sans-serif;
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-primary hover:bg-secondary text-white font-semibold py-3 px-6 rounded-full transition-all duration-200 active:scale-95;
+  }
+
+  .btn-outline {
+    @apply border-2 border-primary text-primary hover:bg-primary hover:text-white font-semibold py-3 px-6 rounded-full transition-all duration-200;
+  }
+
+  .input-field {
+    @apply w-full bg-card border border-gray-700 text-white rounded-xl px-4 py-3 focus:outline-none focus:border-primary transition-colors placeholder-gray-500;
+  }
+
+  .card {
+    @apply bg-card rounded-2xl p-6 border border-gray-800;
+  }
+
+  .swipe-card {
+    @apply absolute w-full h-full rounded-3xl overflow-hidden shadow-2xl cursor-grab active:cursor-grabbing;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #1a1a2e;
+}
+::-webkit-scrollbar-thumb {
+  background: #FF4458;
+  border-radius: 3px;
+}

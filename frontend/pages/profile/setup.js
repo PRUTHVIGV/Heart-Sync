@@ -177,7 +177,7 @@ export default function ProfileSetup() {
                   <div>
                     <label className="text-white/30 text-xs mb-1.5 block uppercase tracking-wider">Height</label>
                     <input value={form.height} onChange={(e) => set("height", e.target.value)}
-                      placeholder="5'10\" or 178cm" className="input-field text-sm" />
+                      placeholder="5ft 10in or 178cm" className="input-field text-sm" />
                   </div>
                 </div>
                 <div>

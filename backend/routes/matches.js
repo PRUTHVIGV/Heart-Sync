@@ -7,12 +7,10 @@ const { authenticate } = require("../middleware/auth");
 
 const router = express.Router();
 
-// GET /api/matches/discover - get profiles to swipe on
+// GET /api/matches/discover
 router.get("/discover", authenticate, async (req, res) => {
   try {
     const currentUser = await User.findById(req.user._id);
-
-    // Build gender filter
     let genderFilter = {};
     if (currentUser.interestedIn === "men") genderFilter = { gender: "male" };
     else if (currentUser.interestedIn === "women") genderFilter = { gender: "female" };
@@ -38,26 +36,37 @@ router.get("/discover", authenticate, async (req, res) => {
   }
 });
 
+// GET /api/matches/likes - who liked current user (premium only)
+router.get("/likes", authenticate, async (req, res) => {
+  try {
+    if (!req.user.isPremium) return res.status(403).json({ message: "Premium required" });
+    const currentUser = await User.findById(req.user._id);
+    const users = await User.find({
+      swipedRight: req.user._id,
+      _id: { $nin: [...currentUser.swipedRight, ...currentUser.swipedLeft, req.user._id] },
+      isActive: true,
+    }).select("name age photos location").limit(50);
+    res.json({ likes: users });
+  } catch {
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 // POST /api/matches/swipe
 router.post("/swipe", authenticate, async (req, res) => {
   try {
     const { targetUserId, direction } = req.body;
     const currentUser = await User.findById(req.user._id);
 
-    // Daily swipe limit for free users
     if (!currentUser.isPremium) {
       const now = new Date();
-      const resetAt = new Date(currentUser.swipesResetAt);
-      const hoursSinceReset = (now - resetAt) / (1000 * 60 * 60);
+      const hoursSinceReset = (now - new Date(currentUser.swipesResetAt)) / (1000 * 60 * 60);
       if (hoursSinceReset >= 24) {
         currentUser.swipesUsed = 0;
         currentUser.swipesResetAt = now;
       }
       if (currentUser.swipesUsed >= 20) {
-        return res.status(429).json({
-          message: "Daily swipe limit reached. Upgrade to Premium for unlimited swipes!",
-          limitReached: true,
-        });
+        return res.status(429).json({ message: "Daily swipe limit reached. Upgrade to Premium!", limitReached: true });
       }
       currentUser.swipesUsed += 1;
     }
@@ -66,13 +75,11 @@ router.post("/swipe", authenticate, async (req, res) => {
       currentUser.swipedRight.push(targetUserId);
       await currentUser.save();
 
-      // Check if target also swiped right on current user
       const targetUser = await User.findById(targetUserId);
       const isMatch = targetUser.swipedRight.includes(req.user._id);
 
       if (isMatch) {
         const match = await Match.create({ users: [req.user._id, targetUserId] });
-        // Notify both users
         await Notification.create([
           { recipient: req.user._id, type: "match", message: `You matched with ${targetUser.name}! 💕`, link: `/chat/${match._id}` },
           { recipient: targetUserId, type: "match", message: `You matched with ${currentUser.name}! 💕`, link: `/chat/${match._id}` },
@@ -112,7 +119,6 @@ router.post("/superlike", authenticate, async (req, res) => {
       return res.json({ matched: true, matchId: match._id });
     }
 
-    // Notify target of superlike
     await Notification.create({
       recipient: targetUserId,
       type: "superlike",
@@ -125,7 +131,25 @@ router.post("/superlike", authenticate, async (req, res) => {
   }
 });
 
-// GET /api/matches - get all matches for current user
+// POST /api/matches/rewind - undo last swipe
+router.post("/rewind", authenticate, async (req, res) => {
+  try {
+    if (!req.user.isPremium) return res.status(403).json({ message: "Premium required" });
+    const currentUser = await User.findById(req.user._id);
+    if (currentUser.swipedLeft.length === 0) return res.status(400).json({ message: "Nothing to rewind" });
+
+    const lastSwiped = currentUser.swipedLeft[currentUser.swipedLeft.length - 1];
+    currentUser.swipedLeft.pop();
+    await currentUser.save();
+
+    const profile = await User.findById(lastSwiped).select("-password -swipedRight -swipedLeft -email");
+    res.json({ profile });
+  } catch {
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// GET /api/matches
 router.get("/", authenticate, async (req, res) => {
   try {
     const matches = await Match.find({ users: req.user._id })

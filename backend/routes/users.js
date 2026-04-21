@@ -134,4 +134,25 @@ router.post("/block", authenticate, async (req, res) => {
   }
 });
 
+// POST /api/users/boost
+router.post("/boost", authenticate, async (req, res) => {
+  try {
+    if (!req.user.isPremium) return res.status(403).json({ message: "Premium required" });
+    const now = new Date();
+    const user = await User.findById(req.user._id);
+    // Allow 1 boost per 24 hours
+    if (user.lastBoostedAt && (now - new Date(user.lastBoostedAt)) < 24 * 60 * 60 * 1000) {
+      return res.status(429).json({ message: "You can only boost once every 24 hours" });
+    }
+    await User.findByIdAndUpdate(req.user._id, {
+      isBoosted: true,
+      boostedUntil: new Date(now.getTime() + 30 * 60 * 1000),
+      lastBoostedAt: now,
+    });
+    res.json({ success: true });
+  } catch {
+    res.status(500).json({ message: "Boost failed" });
+  }
+});
+
 module.exports = router;

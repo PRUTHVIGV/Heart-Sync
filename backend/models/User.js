@@ -73,6 +73,11 @@ const userSchema = new mongoose.Schema(
     swipesResetAt: { type: Date, default: Date.now },
     superLikesUsed: { type: Number, default: 0 },
     superLikesResetAt: { type: Date, default: Date.now },
+
+    // ── Boost ─────────────────────────────────────────────────────────────────
+    isBoosted: { type: Boolean, default: false },
+    boostedUntil: { type: Date },
+    lastBoostedAt: { type: Date },
   },
   { timestamps: true }
 );

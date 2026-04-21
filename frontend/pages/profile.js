@@ -309,7 +309,7 @@ export default function Profile() {
                   <label className="text-white/30 text-xs mb-1.5 block uppercase tracking-wider">Height</label>
                   {editing ? (
                     <input value={form.height} onChange={(e) => set("height", e.target.value)}
-                      placeholder="e.g. 5'10\" or 178cm" className="input-field text-sm" />
+                      placeholder="e.g. 5ft 10in or 178cm" className="input-field text-sm" />
                   ) : (
                     <p className="text-white/60 text-sm flex items-center gap-1">
                       {form.height ? <><FaRuler className="text-primary text-xs" /> {form.height}</> : <span className="text-white/20">Not set</span>}

@@ -4,17 +4,13 @@ import { FaHeart, FaShieldAlt, FaComments, FaStar, FaBolt, FaArrowRight } from "
 import Head from "next/head";
 
 const features = [
-  { icon: <FaHeart />, title: "Smart Matching", desc: "AI-powered compatibility based on interests, personality & behavior.", color: "from-rose-500/20 to-pink-500/20 border-rose-500/20" },
+  { icon: <FaHeart />, title: "Smart Matching", desc: "Compatibility matching based on shared interests, personality & behavior.", color: "from-rose-500/20 to-pink-500/20 border-rose-500/20" },
   { icon: <FaShieldAlt />, title: "100% Verified", desc: "Every profile verified with photo & phone. Zero fake accounts.", color: "from-blue-500/20 to-cyan-500/20 border-blue-500/20" },
   { icon: <FaComments />, title: "Real-time Chat", desc: "Instant messaging with typing indicators and read receipts.", color: "from-purple-500/20 to-violet-500/20 border-purple-500/20" },
   { icon: <FaBolt />, title: "Instant Matches", desc: "Get matched in seconds. No waiting, no guessing.", color: "from-yellow-500/20 to-orange-500/20 border-yellow-500/20" },
 ];
 
-const testimonials = [
-  { name: "Sarah K.", age: 26, text: "Found my soulmate in 2 weeks! HeartSync is unlike any other app.", avatar: "SK" },
-  { name: "James M.", age: 29, text: "The matching algorithm is insane. Every match felt so compatible.", avatar: "JM" },
-  { name: "Priya R.", age: 24, text: "Safe, verified profiles. I finally felt comfortable using a dating app.", avatar: "PR" },
-];
+
 
 export default function Home() {
   const router = useRouter();
@@ -72,7 +68,7 @@ export default function Home() {
               className="inline-flex items-center gap-2 bg-white/5 border border-white/10 text-white/80 text-sm px-4 py-2 rounded-full mb-8 backdrop-blur-sm"
             >
               <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-              🔥 10,000+ matches made today
+              🔥 Early access — be among the first to join
             </motion.div>
 
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-white leading-[1.05] mb-6 tracking-tight">
@@ -84,7 +80,7 @@ export default function Home() {
             </h1>
 
             <p className="text-white/50 text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed">
-              HeartSync uses AI to connect real people with real intentions.
+              HeartSync connects real people with real intentions.
               Verified profiles, smart matching, and genuine connections — all in one place.
             </p>
 
@@ -151,7 +147,7 @@ export default function Home() {
         <section className="px-6 py-12 max-w-4xl mx-auto">
           <div className="glass p-8">
             <div className="grid grid-cols-3 gap-8 text-center">
-              {[["500K+", "Active Users"], ["10K+", "Daily Matches"], ["98%", "Verified Profiles"]].map(([num, label]) => (
+              {[["🚀", "Early Access"], ["💬", "Real Connections"], ["✅", "Verified Profiles"]].map(([num, label]) => (
                 <motion.div
                   key={label}
                   initial={{ opacity: 0, y: 20 }}
@@ -199,41 +195,18 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Testimonials */}
+        {/* Founding Members CTA */}
         <section className="px-6 py-20 max-w-5xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-14"
+            className="glass p-10 text-center"
           >
-            <h2 className="text-4xl font-black text-white mb-4">Real Stories 💕</h2>
-            <p className="text-white/40">From people who found love on HeartSync</p>
+            <div className="text-4xl mb-4">🌟</div>
+            <h2 className="text-3xl font-black text-white mb-3">Be a Founding Member</h2>
+            <p className="text-white/50 text-lg max-w-xl mx-auto">HeartSync is just getting started. Join now and be among the first 100 members — shape the app, get early perks, and find real connections from day one.</p>
           </motion.div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {testimonials.map((t, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="glass p-6"
-              >
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white text-sm font-bold">
-                    {t.avatar}
-                  </div>
-                  <div>
-                    <p className="text-white font-semibold text-sm">{t.name}</p>
-                    <p className="text-white/40 text-xs">Age {t.age}</p>
-                  </div>
-                  <div className="ml-auto text-yellow-400 text-xs">★★★★★</div>
-                </div>
-                <p className="text-white/60 text-sm leading-relaxed">&ldquo;{t.text}&rdquo;</p>
-              </motion.div>
-            ))}
-          </div>
         </section>
 
         {/* CTA */}
@@ -248,7 +221,7 @@ export default function Home() {
             <div className="relative z-10">
               <div className="text-5xl mb-4 float inline-block">💕</div>
               <h2 className="text-4xl md:text-5xl font-black text-white mb-4">Ready for Love?</h2>
-              <p className="text-white/50 mb-8 text-lg">Join 500,000+ people already finding their match.</p>
+              <p className="text-white/50 mb-8 text-lg">Join the founding members and start making real connections today.</p>
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -270,7 +243,7 @@ export default function Home() {
               </div>
               <span className="text-white/60 text-sm font-semibold">HeartSync</span>
             </div>
-            <p className="text-white/30 text-sm">© 2024 HeartSync. All rights reserved.</p>
+            <p className="text-white/30 text-sm">© 2026 HeartSync. All rights reserved.</p>
             <div className="flex gap-6 text-white/30 text-sm">
               <span onClick={() => router.push("/privacy")} className="hover:text-white/60 cursor-pointer transition-colors">Privacy</span>
               <span onClick={() => router.push("/terms")} className="hover:text-white/60 cursor-pointer transition-colors">Terms</span>

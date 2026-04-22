@@ -2,7 +2,7 @@ import { useState } from "react";
 import { motion, useMotionValue, useTransform, useAnimation } from "framer-motion";
 import { FaMapMarkerAlt, FaBriefcase, FaInfoCircle } from "react-icons/fa";
 
-export default function SwipeCard({ profile, onSwipeLeft, onSwipeRight, preview = false }) {
+export default function SwipeCard({ profile, onSwipeLeft, onSwipeRight, onCompatClick, preview = false }) {
   const [currentPhoto, setCurrentPhoto] = useState(0);
   const [showInfo, setShowInfo] = useState(false);
   const x = useMotionValue(0);
@@ -94,10 +94,11 @@ export default function SwipeCard({ profile, onSwipeLeft, onSwipeRight, preview 
 
         {/* Compatibility Score */}
         {profile.compatibilityScore > 0 && (
-          <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-sm border border-white/20 rounded-full px-3 py-1 flex items-center gap-1.5 z-10">
+          <button onClick={(e) => { e.stopPropagation(); onCompatClick?.(); }}
+            className="absolute top-4 right-4 bg-black/60 backdrop-blur-sm border border-white/20 rounded-full px-3 py-1 flex items-center gap-1.5 z-10 hover:border-primary/50 transition-all">
             <span className="text-xs font-black text-transparent bg-gradient-to-r from-primary to-accent bg-clip-text">{profile.compatibilityScore}%</span>
             <span className="text-white/50 text-xs">match</span>
-          </div>
+          </button>
         )}
 
         {/* Info toggle */}

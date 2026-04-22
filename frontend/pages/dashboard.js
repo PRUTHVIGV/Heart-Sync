@@ -7,6 +7,7 @@ import Head from "next/head";
 import Navbar from "../components/ui/Navbar";
 import SwipeCard from "../components/cards/SwipeCard";
 import BoostButton from "../components/ui/BoostButton";
+import CompatibilityScore from "../components/ui/CompatibilityScore";
 import { FaHeart, FaTimes, FaStar, FaCrown, FaUndo, FaFilter } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -21,6 +22,7 @@ export default function Dashboard() {
   const [actionHint, setActionHint] = useState(null);
   const [rewinding, setRewinding] = useState(false);
   const [lastSwiped, setLastSwiped] = useState(null);
+  const [compatProfile, setCompatProfile] = useState(null);
 
   useEffect(() => {
     if (!loading && !user) router.push("/login");
@@ -176,6 +178,7 @@ export default function Dashboard() {
                     profile={currentProfile}
                     onSwipeLeft={() => handleSwipe("left", currentProfile._id)}
                     onSwipeRight={() => handleSwipe("right", currentProfile._id)}
+                    onCompatClick={() => setCompatProfile(currentProfile)}
                   />
                 </>
               )}
@@ -272,6 +275,12 @@ export default function Dashboard() {
                 </div>
               </motion.div>
             </motion.div>
+          )}
+        </AnimatePresence>
+        {/* Compatibility Modal */}
+        <AnimatePresence>
+          {compatProfile && (
+            <CompatibilityScore you={user} match={compatProfile} onClose={() => setCompatProfile(null)} />
           )}
         </AnimatePresence>
       </div>

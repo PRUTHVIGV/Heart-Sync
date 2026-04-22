@@ -7,6 +7,19 @@ const { authenticate } = require("../middleware/auth");
 
 const router = express.Router();
 
+function compatibilityScore(a, b) {
+  let score = 0;
+  const sharedInterests = (a.interests || []).filter((i) => (b.interests || []).includes(i));
+  score += Math.min(sharedInterests.length * 8, 40);
+  if (a.relationshipGoal && a.relationshipGoal === b.relationshipGoal) score += 20;
+  if (a.loveLanguage && a.loveLanguage === b.loveLanguage) score += 15;
+  if (a.personalityType && a.personalityType === b.personalityType) score += 10;
+  if (a.diet && a.diet === b.diet) score += 5;
+  if (a.exercise && a.exercise === b.exercise) score += 5;
+  if (a.kids && a.kids === b.kids) score += 5;
+  return Math.min(score, 99);
+}
+
 // GET /api/matches/discover
 router.get("/discover", authenticate, async (req, res) => {
   try {
@@ -30,7 +43,12 @@ router.get("/discover", authenticate, async (req, res) => {
       .select("-password -swipedRight -swipedLeft -email")
       .limit(20);
 
-    res.json({ profiles });
+    const scored = profiles.map((p) => ({
+      ...p.toObject(),
+      compatibilityScore: compatibilityScore(currentUser, p),
+    }));
+    scored.sort((a, b) => b.compatibilityScore - a.compatibilityScore);
+    res.json({ profiles: scored });
   } catch {
     res.status(500).json({ message: "Server error" });
   }

@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import { useAuth } from "../../context/AuthContext";
-import { FaHeart, FaComments, FaUser, FaFire, FaCog, FaStar } from "react-icons/fa";
+import { FaHeart, FaComments, FaUser, FaFire, FaCog, FaStar, FaShieldAlt, FaDoorOpen } from "react-icons/fa";
 import NotificationBell from "./NotificationBell";
 import { motion } from "framer-motion";
 
@@ -9,6 +9,8 @@ const navItems = [
   { icon: <FaHeart />, label: "Matches", path: "/matches" },
   { icon: <FaStar />, label: "Likes", path: "/likes" },
   { icon: <FaComments />, label: "Messages", path: "/messages" },
+  { icon: <FaDoorOpen />, label: "Rooms", path: "/rooms" },
+  { icon: <FaShieldAlt />, label: "Safe Date", path: "/safe-date" },
   { icon: <FaUser />, label: "Profile", path: "/profile" },
 ];
 

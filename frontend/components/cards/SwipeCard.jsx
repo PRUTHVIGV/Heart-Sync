@@ -92,6 +92,14 @@ export default function SwipeCard({ profile, onSwipeLeft, onSwipeRight, preview 
         {/* Gradient */}
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent pointer-events-none" />
 
+        {/* Compatibility Score */}
+        {profile.compatibilityScore > 0 && (
+          <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-sm border border-white/20 rounded-full px-3 py-1 flex items-center gap-1.5 z-10">
+            <span className="text-xs font-black text-transparent bg-gradient-to-r from-primary to-accent bg-clip-text">{profile.compatibilityScore}%</span>
+            <span className="text-white/50 text-xs">match</span>
+          </div>
+        )}
+
         {/* Info toggle */}
         <button onClick={() => setShowInfo(!showInfo)}
           className="absolute bottom-24 right-4 w-9 h-9 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-colors z-10">

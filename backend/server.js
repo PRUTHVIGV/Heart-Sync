@@ -15,6 +15,8 @@ const notificationRoutes = require("./routes/notifications");
 const adminRoutes = require("./routes/admin");
 const { authenticateSocket } = require("./middleware/auth");
 const { router: paymentRoutes, handleWebhook } = require("./routes/payments");
+const safeDateRoutes = require("./routes/safedate");
+const roomRoutes = require("./routes/rooms");
 const errorHandler = require("./middleware/errorHandler");
 
 const app = express();
@@ -53,6 +55,8 @@ app.use("/api/messages", messageRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/payments", paymentRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/safedate", safeDateRoutes);
+app.use("/api/rooms", roomRoutes);
 
 app.get("/health", (req, res) => res.json({ status: "ok" }));
 

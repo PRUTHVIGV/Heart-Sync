@@ -40,13 +40,22 @@ app.use("/uploads", express.static(require("path").join(__dirname, "uploads")));
 app.post("/api/payments/webhook", express.raw({ type: "application/json" }), handleWebhook);
 
 // Middleware
-app.use(helmet());
-app.use(cors({ origin: process.env.CLIENT_URL || "http://localhost:3000", credentials: true }));
+app.use(helmet({ crossOriginResourcePolicy: false }));
+app.use(cors({
+  origin: [process.env.CLIENT_URL || "http://localhost:3000", "http://localhost:3000"],
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+}));
 app.use(express.json({ limit: "10mb" }));
+app.options("*", cors());
 
-// Rate limiting
-const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 100 });
+// Rate limiting - generous for dev, strict for auth
+const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 500, standardHeaders: true, legacyHeaders: false });
+const authLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 20, message: { message: "Too many attempts, try again later" } });
 app.use("/api/", limiter);
+app.use("/api/auth/login", authLimiter);
+app.use("/api/auth/register", authLimiter);
 
 // Routes
 app.use("/api/auth", authRoutes);

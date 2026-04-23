@@ -52,11 +52,11 @@ router.post(
 
     try {
       const { email, password } = req.body;
-      const user = await User.findOne({ email }).select("+password");
+      const user = await User.findOne({ email });
       if (!user || !(await user.comparePassword(password))) {
         return res.status(401).json({ message: "Invalid email or password" });
       }
-      // Update lastActive without triggering full save
+      // Fire-and-forget lastActive update
       User.findByIdAndUpdate(user._id, { lastActive: new Date() }).exec();
       res.json({ token: generateToken(user._id), user });
     } catch {

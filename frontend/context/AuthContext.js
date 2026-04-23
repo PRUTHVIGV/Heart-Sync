@@ -3,9 +3,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 
-// Global axios config
-axios.defaults.baseURL = process.env.NEXT_PUBLIC_API_URL;
-axios.defaults.timeout = 10000; // 10s timeout
+const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
 const AuthContext = createContext();
 
@@ -14,6 +12,7 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
+  // Set token on every request if it exists
   useEffect(() => {
     const token = Cookies.get("token");
     if (token) {
@@ -26,7 +25,7 @@ export function AuthProvider({ children }) {
 
   const fetchProfile = async () => {
     try {
-      const { data } = await axios.get("/api/auth/me");
+      const { data } = await axios.get(`${API}/api/auth/me`, { timeout: 8000 });
       setUser(data.user);
     } catch {
       Cookies.remove("token");
@@ -37,7 +36,11 @@ export function AuthProvider({ children }) {
   };
 
   const login = async (email, password) => {
-    const { data } = await axios.post("/api/auth/login", { email, password });
+    const { data } = await axios.post(
+      `${API}/api/auth/login`,
+      { email, password },
+      { timeout: 10000 }
+    );
     Cookies.set("token", data.token, { expires: 7 });
     axios.defaults.headers.common["Authorization"] = `Bearer ${data.token}`;
     setUser(data.user);
@@ -45,7 +48,11 @@ export function AuthProvider({ children }) {
   };
 
   const register = async (formData) => {
-    const { data } = await axios.post("/api/auth/register", formData);
+    const { data } = await axios.post(
+      `${API}/api/auth/register`,
+      formData,
+      { timeout: 10000 }
+    );
     Cookies.set("token", data.token, { expires: 7 });
     axios.defaults.headers.common["Authorization"] = `Bearer ${data.token}`;
     setUser(data.user);
@@ -59,10 +66,13 @@ export function AuthProvider({ children }) {
     router.push("/");
   };
 
-  const updateUser = (updatedUser) => setUser((prev) => ({ ...prev, ...updatedUser }));
+  const updateUser = (updatedUser) =>
+    setUser((prev) => ({ ...prev, ...updatedUser }));
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout, updateUser }}>
+    <AuthContext.Provider
+      value={{ user, loading, login, register, logout, updateUser }}
+    >
       {children}
     </AuthContext.Provider>
   );

@@ -3,6 +3,10 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 
+// Global axios config
+axios.defaults.baseURL = process.env.NEXT_PUBLIC_API_URL;
+axios.defaults.timeout = 10000; // 10s timeout
+
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
@@ -22,20 +26,18 @@ export function AuthProvider({ children }) {
 
   const fetchProfile = async () => {
     try {
-      const { data } = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/me`);
+      const { data } = await axios.get("/api/auth/me");
       setUser(data.user);
     } catch {
       Cookies.remove("token");
+      delete axios.defaults.headers.common["Authorization"];
     } finally {
       setLoading(false);
     }
   };
 
   const login = async (email, password) => {
-    const { data } = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`, {
-      email,
-      password,
-    });
+    const { data } = await axios.post("/api/auth/login", { email, password });
     Cookies.set("token", data.token, { expires: 7 });
     axios.defaults.headers.common["Authorization"] = `Bearer ${data.token}`;
     setUser(data.user);
@@ -43,7 +45,7 @@ export function AuthProvider({ children }) {
   };
 
   const register = async (formData) => {
-    const { data } = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/register`, formData);
+    const { data } = await axios.post("/api/auth/register", formData);
     Cookies.set("token", data.token, { expires: 7 });
     axios.defaults.headers.common["Authorization"] = `Bearer ${data.token}`;
     setUser(data.user);
@@ -57,7 +59,7 @@ export function AuthProvider({ children }) {
     router.push("/");
   };
 
-  const updateUser = (updatedUser) => setUser(updatedUser);
+  const updateUser = (updatedUser) => setUser((prev) => ({ ...prev, ...updatedUser }));
 
   return (
     <AuthContext.Provider value={{ user, loading, login, register, logout, updateUser }}>
